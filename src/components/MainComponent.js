@@ -1,19 +1,14 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
+// import { Navbar, NavbarBrand } from 'reactstrap';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
+import { connect } from 'react-redux';
+
 import Menu from './MenuComponent';
 import DishDetail from './DishdetailComponent';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent'
-import { Switch, Route, Redirect, withRouter } from 'react-router-dom'
-// import { Switch, Route, Redirect,  } from 'react-router'
-import { connect } from 'react-redux';
 import Contact from './ContactComponent';
-// import { DISHES } from '../shared/dishes'
-// import { COMMENTS } from '../shared/comments';
-// import { PROMOTIONS } from '../shared/promotions';
-// import { LEADERS } from '../shared/leaders';
-
 import About from './AboutComponent'
 
 const mapStateToProps = state => {
