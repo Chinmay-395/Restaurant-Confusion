@@ -26,21 +26,47 @@ function RenderDish({ dish }) {
             <div></div>
         );
 }
-function RenderComments({ comments }) {
-    if (comments != null)
+// function RenderComments({ comments, addComment, dishId }) {
+//     if (comments != null)
+//         return (
+//             comments.map((comment) => {
+//                 return (
+//                     <div key={comment.id}>
+//                         <h3>Comments</h3>
+//                         <ul className="list-unstyled">
+//                             <li>{comment.comment}</li>
+//                             <li>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</li>
+//                         </ul>
+//                         <CommentForm dishId={dishId} addComment={addComment} />
+//                     </div>
+//                 )
+//             })
+//         );
+//     else
+//         return (
+//             <div></div>
+//         );
+// }
+function RenderComments({ comments, addComment, dishId }) {
+    if (comments != null) {
+        let commentList = comments.map((comment) => {
+            return (
+                <div key={comment.id}>
+                    <ul className="list-unstyled">
+                        <li>{comment.comment}</li>
+                        <li>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</li>
+                    </ul>
+                </div>
+            )
+        })
         return (
-            comments.map((comment) => {
-                return (
-                    <div key={comment.id}>
-                        <h3>Comments</h3>
-                        <ul className="list-unstyled">
-                            <li>{comment.comment}</li>
-                            <li>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</li>
-                        </ul>
-                    </div>
-                )
-            })
+            <React.Fragment>
+                <h3>Comments</h3>
+                {commentList}
+                <CommentForm dishId={dishId} addComment={addComment} />
+            </React.Fragment>
         );
+    }
     else
         return (
             <div></div>
@@ -70,8 +96,11 @@ const DishDetail = (props) => {
                         <RenderDish dish={props.dish} />
                     </div>
                     <div className="col-12 col-md-5 m-1">
-                        <RenderComments comments={props.comments} />
-                        <CommentForm />
+                        <RenderComments comments={props.comments}
+                            addComment={props.addComment}
+                            dishId={props.dish.id}
+                        />
+                        {/* <CommentForm dishId={dishId} addComment={addComment} /> */}
                     </div>
                 </div>
             </div>
@@ -110,17 +139,19 @@ class CommentForm extends Component {
         })
     }
     handleSubmit(values) {
-        console.log('Current State is: ' + JSON.stringify(values));
-        alert('Current State is: ' + JSON.stringify(values));
+        this.toggleModal();
+        this.props.addComment(this.props.dishId, values.rating, values.author, values.comment);
+        // console.log('Current State is: ' + JSON.stringify(values));
+        // alert('Current State is: ' + JSON.stringify(values));
     }
     render() {
         return (
             <React.Fragment>
-                <div>
-                    <Button outlined onClick={this.toggleModal}>
-                        <span className="fa fa-sign fa-lg"></span> Submit Comment
+
+                <Button outlined onClick={this.toggleModal}>
+                    <span className="fa fa-pencil fa-lg"></span> Submit Comment
                         </Button>
-                </div>
+
 
                 <Modal isOpen={this.state.isModalOpen} toggle={this.toggleModal}>
                     <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
@@ -155,9 +186,9 @@ class CommentForm extends Component {
                                 </Col>
                             </Row>
                             <Row className="form-group">
-                                <Label htmlFor="firstname" md={2}>Your Name</Label>
+                                <Label htmlFor="author" md={2}>Your Name</Label>
                                 <Col md={10}>
-                                    <Control.text model=".firstname" id="firstname" name="firstname"
+                                    <Control.text model=".author" id="author" name="author"
                                         placeholder="First Name"
                                         className="form-control"
                                         validators={{
@@ -166,7 +197,7 @@ class CommentForm extends Component {
                                     />
                                     <Errors
                                         className="text-danger"
-                                        model=".firstname"
+                                        model=".author"
                                         show="touched"
                                         messages={{
                                             required: 'Required',
