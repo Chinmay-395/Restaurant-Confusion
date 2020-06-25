@@ -6,7 +6,7 @@ import {
     Form, FormGroup, Label, Input, Row, Col
 } from 'reactstrap';
 import { Control, LocalForm, Errors } from 'react-redux-form';
-
+import { Loading } from './LoadingComponent'
 import { Link } from 'react-router-dom';
 
 function RenderDish({ dish }) {
@@ -26,27 +26,7 @@ function RenderDish({ dish }) {
             <div></div>
         );
 }
-// function RenderComments({ comments, addComment, dishId }) {
-//     if (comments != null)
-//         return (
-//             comments.map((comment) => {
-//                 return (
-//                     <div key={comment.id}>
-//                         <h3>Comments</h3>
-//                         <ul className="list-unstyled">
-//                             <li>{comment.comment}</li>
-//                             <li>-- {comment.author}, {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</li>
-//                         </ul>
-//                         <CommentForm dishId={dishId} addComment={addComment} />
-//                     </div>
-//                 )
-//             })
-//         );
-//     else
-//         return (
-//             <div></div>
-//         );
-// }
+
 function RenderComments({ comments, addComment, dishId }) {
     if (comments != null) {
         let commentList = comments.map((comment) => {
@@ -76,8 +56,24 @@ function RenderComments({ comments, addComment, dishId }) {
 
 
 const DishDetail = (props) => {
-    console.log('called')
-    if (props.dish != null)
+    if (props.isLoading) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <Loading />
+                </div>
+            </div>
+        )
+    } else if (props.errMess) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <h4>{props.errMess}</h4>
+                </div>
+            </div>
+        )
+    }
+    else if (props.dish != null)
         return (
             <div className="container">
                 <div className="row">
@@ -100,7 +96,6 @@ const DishDetail = (props) => {
                             addComment={props.addComment}
                             dishId={props.dish.id}
                         />
-                        {/* <CommentForm dishId={dishId} addComment={addComment} /> */}
                     </div>
                 </div>
             </div>
@@ -115,10 +110,6 @@ const DishDetail = (props) => {
 export default DishDetail;
 
 
-/*
-    -- Assignment-3 
-    -- creating a CommentForm new class component
-*/
 const required = (val) => val && val.length;
 const maxRating = (len) => (val) => !(val) || (val.length <= len);
 const minRating = (len) => (val) => val && (val.length >= len);
