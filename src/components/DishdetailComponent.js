@@ -61,31 +61,6 @@ function RenderComments({ comments, postComment, dishId }) {
             </React.Fragment>
         );
     }
-    // if (comments != null) {
-    //     let commentList = comments.map((comment) => {
-    //         return (
-    //             <Stagger in>
-    //                 <Fade key={comment.id}>
-    //                     {/* <ul className="list-unstyled"> */}
-    //                     <li>
-    //                         <p>{comment.comment}</p>
-    //                         <p>-- {comment.author} , {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' }).format(new Date(Date.parse(comment.date)))}</p>
-
-    //                     </li>
-
-    //                     {/* </ul> */}
-    //                 </Fade>
-    //             </Stagger>
-    //         )
-    //     })
-    //     return (
-    //         <React.Fragment>
-    //             <h3>Comments</h3>
-    //             {commentList}
-    //             <CommentForm dishId={dishId} postComment={postComment} />
-    //         </React.Fragment>
-    //     );
-    // }
     else
         return (
             <div></div>
