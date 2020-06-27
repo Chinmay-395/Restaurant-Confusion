@@ -7,24 +7,47 @@ These function{addComment,fetchDishes,dishesLoading,dishesFailed,
 addDishes} are called an "Action" which will return JS-object
 and send this data to their respective "reducers"
 */
-export const addComment = (dishId, rating, author, comment) => ({
-    //This "Action" will send the JS-object to <comment.js> file 
-    //which is a "reducer" for comment-data
+export const addComment = (comment) => ({
     type: ActionTypes.ADD_COMMENT,
-    payload: {
+    payload: comment
+});
+
+export const postComment = (dishId, rating, author, comment) => (dispatch) => {
+
+    const newComment = {
         dishId: dishId,
         rating: rating,
         author: author,
         comment: comment
-    }
-});
+    };
+    newComment.date = new Date().toISOString();
 
-/*
-    "fetchDishes" is a Redux-Thunk
-    this is returning an action whereas other
-    dishesLoading, dishesFailed & addDishes are
-    returning action-object[JS-object]
-*/
+    return fetch(baseUrl + 'comments', {
+        method: "POST",
+        body: JSON.stringify(newComment),
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "same-origin"
+    })
+        .then(response => {
+            if (response.ok) {
+                return response;
+            } else {
+                var error = new Error('Error ' + response.status + ': ' + response.statusText);
+                error.response = response;
+                throw error;
+            }
+        },
+            error => {
+                throw error;
+            })
+        .then(response => response.json())
+        .then(response => dispatch(addComment(response)))
+        .catch(error => { console.log('post comments', error.message); alert('Your comment could not be posted\nError: ' + error.message); });
+};
+
+
 export const fetchDishes = () => (dispatch) => {
 
     dispatch(dishesLoading(true));
